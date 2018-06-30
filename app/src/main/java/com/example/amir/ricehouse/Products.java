@@ -3,16 +3,13 @@ package com.example.amir.ricehouse;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -30,7 +27,15 @@ public class Products extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_products);
         setUpToolbar();
+        fetchData();
         setUpGridView();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.product, menu);
+        return true;
     }
 
     @Override
@@ -39,18 +44,19 @@ public class Products extends AppCompatActivity {
             case R.id.homeAsUp:
                 this.finish();
                 break;
+            case R.id.refresh:
+                fetchData();
+                setUpGridView();
+                break;
         }
         return super.onOptionsItemSelected(menuItem);
     }
 
-    public void fetchData(View view) {
-        TextView textView = findViewById(R.id.textView3);
+    private void fetchData() {
         RiceHouseService riceHouseService = RiceHouseRetrofitClass.getRiceHouseService();
         Observable<RiceHouseResponse> observable = riceHouseService.getAllProducts()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread());
-
-        //Button button = findViewById(R.id.button);
         observable.subscribe(new Observer<RiceHouseResponse>() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -73,9 +79,6 @@ public class Products extends AppCompatActivity {
 
             }
         });
-
-
-
     }
 
     private void setUpToolbar() {
@@ -92,7 +95,7 @@ public class Products extends AppCompatActivity {
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(adapterView.getContext(), "Image number: " + i,
+                Toast.makeText(adapterView.getContext(), data[i].getTitle(),
                         Toast.LENGTH_SHORT).show();
             }
         });

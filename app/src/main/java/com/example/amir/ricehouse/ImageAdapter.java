@@ -1,6 +1,7 @@
 package com.example.amir.ricehouse;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -34,7 +35,7 @@ public class ImageAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int i) {
-        return round(i / 3);
+        return round(i / 2);
     }
 
     @Override
@@ -43,13 +44,13 @@ public class ImageAdapter extends BaseAdapter {
         if (view == null) {
             // if it's not recycled, initialize some attributes
             imageView = new ImageView(context);
-            imageView.setLayoutParams(new GridView.LayoutParams(150, 150));
+            imageView.setLayoutParams(new GridView.LayoutParams(250, 250));
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageView.setPadding(10, 10, 10, 10);
         } else {
             imageView = (ImageView) view;
         }
-        Picasso.with(context).load(avatars[i]).into(imageView);
+        Picasso.with(context).load("https:" + avatars[i]).into(imageView);
         return imageView;
     }
 
